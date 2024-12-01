@@ -21,11 +21,11 @@ def get_distance(left: list[int], right: list[int]) -> int:
 
 
 def get_sizes(left: list, right: list) -> tuple[int, int]:
-    return (len(left), len(right))
+    return len(left), len(right)
 
 
 def get_uniques(left: list, right: list) -> tuple[int, int]:
-    return (len(set(left)), len(set(right)))
+    return len(set(left)), len(set(right))
 
 
 def main():
