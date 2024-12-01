@@ -15,16 +15,22 @@ def read_lists(filename: str) -> list[list[int]]:
     return lists
 
 
-def get_distance(lists: list[list[int]]) -> int:
+def get_distance(filename: str) -> int:
     """Calculate the "distance" score from AoC 2024 Day 1, Part 1."""
+
+    lists = read_lists(filename)
+
     distance = 0
     for l, r in zip(sorted(lists[0]), sorted(lists[1])):
         distance += abs(l - r)
     return distance
 
 
-def get_similarity(lists: list[list[int]]) -> int:
+def get_similarity(filename: str) -> int:
     """Calculate the "similarity" score from AoC 2024 Day 1, Part 2."""
+
+    lists = read_lists(filename)
+
     similarity = 0
     left, right = sorted(lists[0]), sorted(lists[1])
     left_index, right_index = 0, 0
@@ -61,13 +67,15 @@ def get_similarity(lists: list[list[int]]) -> int:
             return similarity
 
 
-def get_sizes(lists: list[list]) -> list[int]:
+def get_sizes(filename: str) -> list[int]:
     """Count the number of values in each input list."""
+    lists = read_lists(filename)
     return [len(x) for x in lists]
 
 
-def get_uniques(lists: list[list]) -> list[int]:
+def get_uniques(filename: str) -> list[int]:
     """Count the number of unique values in each input list."""
+    lists = read_lists(filename)
     return [len(set(x)) for x in lists]
 
 
@@ -89,9 +97,7 @@ def main():
 
     args = parser.parse_args()
 
-    lists = read_lists(args.file)
-
-    print(args.func(lists))
+    print(args.func(args.file))
 
 
 if __name__ == '__main__':
