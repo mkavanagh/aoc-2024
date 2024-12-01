@@ -4,27 +4,29 @@ import argparse
 
 
 def read_lists(filename: str) -> list[list[int]]:
-    lists = [[], []]
+    """Read a file containing columnar lists of integers (with equal length)."""
+    lists = []
     with open(filename, 'r', encoding='utf-8') as file:
         for line in file:
-            (l, r) = line.split()
-            lists[0].append(int(l))
-            lists[1].append(int(r))
+            for i, x in enumerate(line.split()):
+                if i == len(lists):
+                    lists.append([])
+                lists[i].append(int(x))
     return lists
 
 
-def get_distance(left: list[int], right: list[int]) -> int:
+def get_distance(lists: list[list[int]]) -> int:
     """Calculate the "distance" score from AoC 2024 Day 1, Part 1."""
     distance = 0
-    for l, r in zip(sorted(left), sorted(right)):
+    for l, r in zip(sorted(lists[0]), sorted(lists[1])):
         distance += abs(l - r)
     return distance
 
 
-def get_similarity(left: list[int], right: list[int]) -> int:
+def get_similarity(lists: list[list[int]]) -> int:
     """Calculate the "similarity" score from AoC 2024 Day 1, Part 2."""
     similarity = 0
-    left, right = sorted(left), sorted(right)
+    left, right = sorted(lists[0]), sorted(lists[1])
     left_index, right_index = 0, 0
 
     while left_index < len(left) and right_index < len(right):
@@ -59,14 +61,14 @@ def get_similarity(left: list[int], right: list[int]) -> int:
             return similarity
 
 
-def get_sizes(left: list, right: list) -> tuple[int, int]:
+def get_sizes(lists: list[list]) -> list[int]:
     """Count the number of values in each input list."""
-    return len(left), len(right)
+    return [len(x) for x in lists]
 
 
-def get_uniques(left: list, right: list) -> tuple[int, int]:
+def get_uniques(lists: list[list]) -> list[int]:
     """Count the number of unique values in each input list."""
-    return len(set(left)), len(set(right))
+    return [len(set(x)) for x in lists]
 
 
 def main():
@@ -87,9 +89,9 @@ def main():
 
     args = parser.parse_args()
 
-    (left, right) = read_lists(args.file)
+    lists = read_lists(args.file)
 
-    print(args.func(left, right))
+    print(args.func(lists))
 
 
 if __name__ == '__main__':
