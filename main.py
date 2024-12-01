@@ -20,8 +20,12 @@ def get_distance(left: list[int], right: list[int]) -> int:
     return distance
 
 
-def get_sizes(left: list, right: list) -> list[int]:
-    return [len(left), len(right)]
+def get_sizes(left: list, right: list) -> tuple[int, int]:
+    return (len(left), len(right))
+
+
+def get_uniques(left: list, right: list) -> tuple[int, int]:
+    return (len(set(left)), len(set(right)))
 
 
 def main():
@@ -29,13 +33,12 @@ def main():
 
     parser.add_argument('file')
 
-    cmds = parser.add_subparsers(required=True)
+    cmd_parsers = parser.add_subparsers(required=True)
 
-    distance_cmd = cmds.add_parser('distance')
-    distance_cmd.set_defaults(func=get_distance)
-
-    sizes_cmd = cmds.add_parser('sizes')
-    sizes_cmd.set_defaults(func=get_sizes)
+    for func in [get_distance, get_sizes, get_uniques]:
+        cmd = func.__name__.removeprefix('get_')
+        cmd_parser = cmd_parsers.add_parser(cmd)
+        cmd_parser.set_defaults(func=func)
 
     args = parser.parse_args()
 
