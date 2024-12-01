@@ -20,14 +20,22 @@ def get_distance(left: list[int], right: list[int]) -> int:
     return distance
 
 
+def get_sizes(left: list, right: list) -> list[int]:
+    return [len(left), len(right)]
+
+
 def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('file')
 
-    subparsers = parser.add_subparsers()
-    distance_cmd = subparsers.add_parser('distance')
+    cmds = parser.add_subparsers(required=True)
+
+    distance_cmd = cmds.add_parser('distance')
     distance_cmd.set_defaults(func=get_distance)
+
+    sizes_cmd = cmds.add_parser('sizes')
+    sizes_cmd.set_defaults(func=get_sizes)
 
     args = parser.parse_args()
 
