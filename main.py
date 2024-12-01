@@ -20,6 +20,43 @@ def get_distance(left: list[int], right: list[int]) -> int:
     return distance
 
 
+def get_similarity(left: list[int], right: list[int]) -> int:
+    similarity = 0
+    left, right = sorted(left), sorted(right)
+    left_index, right_index = 0, 0
+
+    while left_index < len(left) and right_index < len(right):
+        left_val = left[left_index]
+        next_val = None
+
+        # count consecutive occurrences of left value
+        left_count = 1
+        while left_index + 1 < len(left):
+            left_index += 1
+            next_val = left[left_index]
+            if next_val > left_val:
+                break
+            else:
+                left_count += 1
+
+        # count consecutive matching occurrences of right value
+        right_count = 0
+        while right_index < len(right):
+            right_val = right[right_index]
+            if left_val < right_val:
+                break
+            elif left_val == right_val:
+                right_count += 1
+                right_index += 1
+            elif left_val > right_val:
+                right_index += 1
+
+        similarity += left_val * left_count * right_count
+
+        if next_val is None:
+            return similarity
+
+
 def get_sizes(left: list, right: list) -> tuple[int, int]:
     return len(left), len(right)
 
@@ -35,7 +72,7 @@ def main():
 
     cmd_parsers = parser.add_subparsers(required=True)
 
-    for func in [get_distance, get_sizes, get_uniques]:
+    for func in [get_distance, get_similarity, get_sizes, get_uniques]:
         cmd = func.__name__.removeprefix('get_')
         cmd_parser = cmd_parsers.add_parser(cmd)
         cmd_parser.set_defaults(func=func)
