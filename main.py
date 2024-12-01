@@ -14,6 +14,7 @@ def read_lists(filename: str) -> list[list[int]]:
 
 
 def get_distance(left: list[int], right: list[int]) -> int:
+    """Calculate the "distance" score from AoC 2024 Day 1, Part 1."""
     distance = 0
     for l, r in zip(sorted(left), sorted(right)):
         distance += abs(l - r)
@@ -21,6 +22,7 @@ def get_distance(left: list[int], right: list[int]) -> int:
 
 
 def get_similarity(left: list[int], right: list[int]) -> int:
+    """Calculate the "similarity" score from AoC 2024 Day 1, Part 2."""
     similarity = 0
     left, right = sorted(left), sorted(right)
     left_index, right_index = 0, 0
@@ -58,10 +60,12 @@ def get_similarity(left: list[int], right: list[int]) -> int:
 
 
 def get_sizes(left: list, right: list) -> tuple[int, int]:
+    """Count the number of values in each input list."""
     return len(left), len(right)
 
 
 def get_uniques(left: list, right: list) -> tuple[int, int]:
+    """Count the number of unique values in each input list."""
     return len(set(left)), len(set(right))
 
 
@@ -70,11 +74,15 @@ def main():
 
     parser.add_argument('file')
 
-    cmd_parsers = parser.add_subparsers(required=True)
+    cmd_parsers = parser.add_subparsers(
+        title='Available sub-commands',
+        metavar='[command]',
+        required=True
+    )
 
     for func in [get_distance, get_similarity, get_sizes, get_uniques]:
         cmd = func.__name__.removeprefix('get_')
-        cmd_parser = cmd_parsers.add_parser(cmd)
+        cmd_parser = cmd_parsers.add_parser(cmd, help=func.__doc__)
         cmd_parser.set_defaults(func=func)
 
     args = parser.parse_args()
