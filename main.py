@@ -95,20 +95,42 @@ def get_safe_count(filename: str) -> int:
     return sum(is_safe(report) for report in read_rows(filename))
 
 
-def is_safe(report: list[int]) -> bool:
+def is_safe(report: list[int], use_dampener: bool=False) -> bool:
     """
     Checks if a report has "safe levels" according to AoC 2024 Day 2, Part 1.
     """
     last_sign = None
     for i in range(0, len(report) - 1):
-        delta = report[i] - report[i + 1]
+        delta = report[i] - report[i+1]
         if not (1 <= abs(delta) <= 3):
-            return False
+            return use_dampener and (
+                dampener(report, i)
+                or dampener(report, i + 1)
+             )
         sign = int(delta < 0)
         if last_sign is not None and last_sign != sign:
-            return False
+            return use_dampener and (
+                dampener(report, i - 1)
+                or dampener(report, i)
+                or dampener(report, i + 1)
+            )
         last_sign = sign
     return True
+
+
+def dampener(report: list[int], i: int) -> bool:
+    return is_safe(report[:i] + report[i+1:]) # cut out report[i]
+
+
+def get_dampened_count(filename: str) -> int:
+    """
+    Count the number of "safe reports" after "dampening" according to AoC 2024
+    Day 2, Part 2.
+    """
+    return sum(
+        is_safe(report, True)
+        for report in read_rows(filename)
+    )
 
 
 def main():
@@ -123,7 +145,8 @@ def main():
     )
 
     funcs = [
-        get_distance, get_similarity, get_sizes, get_uniques, get_safe_count
+        get_distance, get_similarity, get_sizes, get_uniques,
+        get_safe_count, get_dampened_count
     ]
 
     for func in funcs:
