@@ -3,7 +3,7 @@
 import argparse
 
 
-def read_lists(filename: str) -> list[list[int]]:
+def read_columns(filename: str) -> list[list[int]]:
     """Read a file containing columnar lists of integers (with equal length)."""
     lists = []
     with open(filename, 'r', encoding='utf-8') as file:
@@ -15,10 +15,19 @@ def read_lists(filename: str) -> list[list[int]]:
     return lists
 
 
+def read_rows(filename: str) -> list[list[int]]:
+    """Read a file containing rows of integers, one row per line."""
+    with open(filename, 'r', encoding='utf-8') as file:
+        return [
+            [int(x) for x in line.split()]
+            for line in file
+        ]
+
+
 def get_distance(filename: str) -> int:
     """Calculate the "distance" score from AoC 2024 Day 1, Part 1."""
 
-    lists = read_lists(filename)
+    lists = read_columns(filename)
 
     distance = 0
     for l, r in zip(sorted(lists[0]), sorted(lists[1])):
@@ -29,7 +38,7 @@ def get_distance(filename: str) -> int:
 def get_similarity(filename: str) -> int:
     """Calculate the "similarity" score from AoC 2024 Day 1, Part 2."""
 
-    lists = read_lists(filename)
+    lists = read_columns(filename)
 
     similarity = 0
     left, right = sorted(lists[0]), sorted(lists[1])
@@ -69,14 +78,37 @@ def get_similarity(filename: str) -> int:
 
 def get_sizes(filename: str) -> list[int]:
     """Count the number of values in each input list."""
-    lists = read_lists(filename)
+    lists = read_columns(filename)
     return [len(x) for x in lists]
 
 
 def get_uniques(filename: str) -> list[int]:
     """Count the number of unique values in each input list."""
-    lists = read_lists(filename)
+    lists = read_columns(filename)
     return [len(set(x)) for x in lists]
+
+
+def get_safe_count(filename: str) -> int:
+    """
+    Count the number of "safe reports" according to AoC 2024 Day 2, Part 1.
+    """
+    return sum(is_safe(report) for report in read_rows(filename))
+
+
+def is_safe(report: list[int]) -> bool:
+    """
+    Checks if a report has "safe levels" according to AoC 2024 Day 2, Part 1.
+    """
+    last_sign = None
+    for i in range(0, len(report) - 1):
+        delta = report[i] - report[i + 1]
+        if not (1 <= abs(delta) <= 3):
+            return False
+        sign = int(delta < 0)
+        if last_sign is not None and last_sign != sign:
+            return False
+        last_sign = sign
+    return True
 
 
 def main():
@@ -90,7 +122,11 @@ def main():
         required=True
     )
 
-    for func in [get_distance, get_similarity, get_sizes, get_uniques]:
+    funcs = [
+        get_distance, get_similarity, get_sizes, get_uniques, get_safe_count
+    ]
+
+    for func in funcs:
         cmd = func.__name__.removeprefix('get_')
         cmd_parser = cmd_parsers.add_parser(cmd, help=func.__doc__)
         cmd_parser.set_defaults(func=func)
