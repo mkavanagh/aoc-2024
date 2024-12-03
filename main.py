@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
+"""Solutions to Advent of Code 2024 - main entrypoint."""
 
-import argparse, sys
+import argparse
+import sys
+
 from typing import Optional
 
 from lib.common import read_binary, read_columns, read_rows
 
 
 def get_distance(filename: str) -> int:
-    """Calculate the "distance" score from AoC 2024 Day 1, Part 1."""
+    """Calculate the "distance" score from Day 1, Part 1."""
 
     lists = read_columns(filename)
 
@@ -18,7 +21,7 @@ def get_distance(filename: str) -> int:
 
 
 def get_similarity(filename: str) -> int:
-    """Calculate the "similarity" score from AoC 2024 Day 1, Part 2."""
+    """Calculate the "similarity" score from Day 1, Part 2."""
 
     lists = read_columns(filename)
 
@@ -35,18 +38,21 @@ def get_similarity(filename: str) -> int:
         while left_index + 1 < len(left):
             left_index += 1
             next_val = left[left_index]
+
             if next_val > left_val:
                 break
-            else:
-                left_count += 1
+
+            left_count += 1
 
         # count consecutive matching occurrences of right value
         right_count = 0
         while right_index < len(right):
             right_val = right[right_index]
+
             if left_val < right_val:
                 break
-            elif left_val == right_val:
+
+            if left_val == right_val:
                 right_count += 1
                 right_index += 1
             elif left_val > right_val:
@@ -72,62 +78,64 @@ def get_uniques(filename: str) -> list[int]:
 
 def get_safe_count(filename: str) -> int:
     """
-    Count the number of "safe reports" according to AoC 2024 Day 2, Part 1.
+    Count the number of "safe reports" according to Day 2, Part 1.
     """
-    return sum(is_safe(report) for report in read_rows(filename))
+    return sum(_is_safe(report) for report in read_rows(filename))
 
 
-def is_safe(report: list[int], use_dampener: bool=False) -> bool:
-    """
-    Checks if a report has "safe levels" according to AoC 2024 Day 2, Part 1.
-    """
+def _is_safe(report: list[int], use_dampener: bool=False) -> bool:
     last_sign = None
     for i in range(0, len(report) - 1):
         delta = report[i] - report[i+1]
         if not (1 <= abs(delta) <= 3):
             return use_dampener and (
-                dampener(report, i)
-                or dampener(report, i + 1)
-             )
+                _dampener(report, i)
+                or _dampener(report, i + 1)
+            )
         sign = int(delta < 0)
         if last_sign is not None and last_sign != sign:
             return use_dampener and (
-                dampener(report, i - 1)
-                or dampener(report, i)
-                or dampener(report, i + 1)
+                _dampener(report, i - 1)
+                or _dampener(report, i)
+                or _dampener(report, i + 1)
             )
         last_sign = sign
     return True
 
 
-def dampener(report: list[int], i: int) -> bool:
-    return is_safe(report[:i] + report[i+1:]) # cut out report[i]
+def _dampener(report: list[int], i: int) -> bool:
+    return _is_safe(report[:i] + report[i + 1:]) # cut out report[i]
 
 
 def get_dampened_count(filename: str) -> int:
     """
-    Count the number of "safe reports" after "dampening" according to AoC 2024
-    Day 2, Part 2.
+    Count the number of "safe reports" after "dampening" according to Day 2,
+    Part 2.
     """
     return sum(
-        is_safe(report, True)
+        _is_safe(report, True)
         for report in read_rows(filename)
     )
 
 
 def get_mul(filename: str) -> int:
+    """Parse and execute a "mul" program according to Day 3, Part 1."""
     program = read_binary(filename)
-    parsed = parse_mul(program)
+    parsed = _parse_mul(program)
     return sum(x * y for x, y in parsed)
 
 
-def get_conditional_mul(filename: str) -> int:
+def get_mul_conditional(filename: str) -> int:
+    """
+    Parse and execute a "mul with conditionals" program according to Day 3,
+    Part 2.
+    """
     program = read_binary(filename)
-    parsed = parse_conditional_mul(program)
+    parsed = _parse_conditional_mul(program)
     return sum(x * y for x, y in parsed)
 
 
-def parse_mul(program: bytes) -> list[tuple[int, int]]:
+def _parse_mul(program: bytes) -> list[tuple[int, int]]:
     i = 0
     results = []
     while i < len(program):
@@ -140,7 +148,7 @@ def parse_mul(program: bytes) -> list[tuple[int, int]]:
     return results
 
 
-def parse_conditional_mul(program: bytes) -> list[tuple[int, int]]:
+def _parse_conditional_mul(program: bytes) -> list[tuple[int, int]]:
     i = 0
     results = []
     mul_enabled = True
@@ -177,8 +185,7 @@ def _consume_mul(
             return i, None
 
         return i + 1, (value_1, value_2)
-    else:
-        return i + 1, None
+    return i + 1, None
 
 
 def _consume_number(
@@ -201,12 +208,17 @@ def _consume_conditional(
 ) -> tuple[int, Optional[bool]]:
     if program.startswith(b'do()', i):
         return i + len(b'do()'), True
-    elif program.startswith(b'don\'t()', i):
+
+    if program.startswith(b'don\'t()', i):
         return i + len(b'don\'t()'), False
+
     return i + 1, None
 
 
 def main(argv: list[str]):
+    """
+    Main entrypoint - parse command line arguments and invoke run function.
+    """
     parser = argparse.ArgumentParser()
 
     parser.add_argument('file')
@@ -220,7 +232,7 @@ def main(argv: list[str]):
     funcs = [
         get_distance, get_similarity, get_sizes, get_uniques,
         get_safe_count, get_dampened_count,
-        get_mul, get_conditional_mul
+        get_mul, get_mul_conditional
     ]
 
     for func in funcs:
