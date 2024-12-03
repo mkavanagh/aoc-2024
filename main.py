@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+from typing import Optional
 
 
 def read_columns(filename: str) -> list[list[int]]:
@@ -22,6 +23,11 @@ def read_rows(filename: str) -> list[list[int]]:
             [int(x) for x in line.split()]
             for line in file
         ]
+
+
+def read_binary(filename: str) -> bytes:
+    with open(filename, 'rb') as file:
+        return file.read()
 
 
 def get_distance(filename: str) -> int:
@@ -133,6 +139,97 @@ def get_dampened_count(filename: str) -> int:
     )
 
 
+def get_mul(filename: str) -> int:
+    program = read_binary(filename)
+    parsed = parse_mul(program)
+    return sum(x * y for x, y in parsed)
+
+
+def get_conditional_mul(filename: str) -> int:
+    program = read_binary(filename)
+    parsed = parse_conditional_mul(program)
+    return sum(x * y for x, y in parsed)
+
+
+def parse_mul(program: bytes) -> list[tuple[int, int]]:
+    i = 0
+    results = []
+    while i < len(program):
+        if program[i] == ord(b'm'):
+            i, mul = _consume_mul(program, i)
+            if mul is not None:
+                results.append(mul)
+        else:
+            i += 1
+    return results
+
+
+def parse_conditional_mul(program: bytes) -> list[tuple[int, int]]:
+    i = 0
+    results = []
+    mul_enabled = True
+    while i < len(program):
+        if mul_enabled and program[i] == ord(b'm'):
+            i, mul = _consume_mul(program, i)
+            if mul is not None:
+                results.append(mul)
+        elif program[i] == ord(b'd'):
+            i, conditional = _consume_conditional(program, i)
+            if conditional is not None:
+                mul_enabled = conditional
+        else:
+            i += 1
+    return results
+
+
+def _consume_mul(
+    program: bytes, i: int
+) -> tuple[int, Optional[tuple[int, int]]]:
+    if program.startswith(b'mul(', i):
+        i, value_1 = _consume_number(program, i + len(b'mul('))
+        if value_1 is None:
+            return i, None
+
+        if program[i] != ord(b','):
+            return i, None
+
+        i, value_2 = _consume_number(program, i + 1)
+        if value_2 is None:
+            return i, None
+
+        if program[i] != ord(b')'):
+            return i, None
+
+        return i + 1, (value_1, value_2)
+    else:
+        return i + 1, None
+
+
+def _consume_number(
+    program: bytes, i: int
+) -> tuple[int, Optional[int]]:
+    matched = bytearray()
+    while i < len(program) and program[i] in set(b'0123456789'):
+        matched.append(program[i])
+        i += 1
+
+    value = None
+    if len(matched) > 0:
+        value = int(matched.decode(encoding='ascii'))
+
+    return i, value
+
+
+def _consume_conditional(
+    program: bytes, i: int
+) -> tuple[int, Optional[bool]]:
+    if program.startswith(b'do()', i):
+        return i + len(b'do()'), True
+    elif program.startswith(b'don\'t()', i):
+        return i + len(b'don\'t()'), False
+    return i + 1, None
+
+
 def main():
     parser = argparse.ArgumentParser()
 
@@ -146,7 +243,8 @@ def main():
 
     funcs = [
         get_distance, get_similarity, get_sizes, get_uniques,
-        get_safe_count, get_dampened_count
+        get_safe_count, get_dampened_count,
+        get_mul, get_conditional_mul
     ]
 
     for func in funcs:
