@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import argparse
+import argparse, sys
 from typing import Optional
 
 
@@ -230,7 +230,7 @@ def _consume_conditional(
     return i + 1, None
 
 
-def main():
+def main(argv: list[str]):
     parser = argparse.ArgumentParser()
 
     parser.add_argument('file')
@@ -252,10 +252,10 @@ def main():
         cmd_parser = cmd_parsers.add_parser(cmd, help=func.__doc__)
         cmd_parser.set_defaults(func=func)
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv[1:])
 
     print(args.func(args.file))
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv)
