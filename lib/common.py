@@ -26,3 +26,9 @@ def read_binary(filename: str) -> bytes:
     """Read a binary file as bytes."""
     with open(filename, 'rb') as file:
         return file.read()
+
+
+def read_strings(filename: str) -> list[str]:
+    """Read a text file as a list of strings, one per line."""
+    with open(filename, 'r') as file:
+        return [line for line in file]

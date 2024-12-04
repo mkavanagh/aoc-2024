@@ -7,6 +7,7 @@ import sys
 from day01.commands import get_distance, get_similarity
 from day02.commands import get_safe_count, get_dampened_count
 from day03.commands import get_mul, get_mul_conditional
+from day04.commands import get_xmas_count
 from lib.commands import get_sizes, get_uniques
 
 
@@ -27,7 +28,8 @@ def main(argv: list[str]):
     funcs = [
         get_distance, get_similarity, get_sizes, get_uniques,
         get_safe_count, get_dampened_count,
-        get_mul, get_mul_conditional
+        get_mul, get_mul_conditional,
+        get_xmas_count
     ]
 
     for func in funcs:
