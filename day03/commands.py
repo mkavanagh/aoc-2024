@@ -6,7 +6,7 @@ from lib.common import read_binary
 
 
 def get_mul(filename: str) -> int:
-    """Parse and execute a "mul" program according to Part 1."""
+    """Parse and execute a "mul" program according to Day 3, Part 1."""
     program = read_binary(filename)
     parsed = _parse_mul(program)
     return sum(x * y for x, y in parsed)
@@ -14,7 +14,8 @@ def get_mul(filename: str) -> int:
 
 def get_mul_conditional(filename: str) -> int:
     """
-    Parse and execute a "mul with conditionals" program according to Part 2.
+    Parse and execute a "mul with conditionals" program according to Day 3,
+    Part 2.
     """
     program = read_binary(filename)
     parsed = _parse_conditional_mul(program)

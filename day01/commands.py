@@ -4,7 +4,7 @@ from lib.common import read_columns
 
 
 def get_distance(filename: str) -> int:
-    """Calculate the "distance" score from Part 1."""
+    """Calculate the "distance" score from Day 1, Part 1."""
 
     lists = read_columns(filename)
 
@@ -15,7 +15,7 @@ def get_distance(filename: str) -> int:
 
 
 def get_similarity(filename: str) -> int:
-    """Calculate the "similarity" score from Part 2."""
+    """Calculate the "similarity" score from Day 1, Part 2."""
 
     lists = read_columns(filename)
 

@@ -5,7 +5,7 @@ from lib.common import read_rows
 
 def get_safe_count(filename: str) -> int:
     """
-    Count the number of "safe reports" according to Part 1.
+    Count the number of "safe reports" according to Day 2, Part 1.
     """
     return sum(_is_safe(report) for report in read_rows(filename))
 
@@ -36,7 +36,8 @@ def _dampener(report: list[int], i: int) -> bool:
 
 def get_dampened_count(filename: str) -> int:
     """
-    Count the number of "safe reports" after "dampening" according to Part 2.
+    Count the number of "safe reports" after "dampening" according to Day 2,
+    Part 2.
     """
     return sum(
         _is_safe(report, True)
