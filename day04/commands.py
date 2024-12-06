@@ -8,6 +8,23 @@ def get_xmas_count(filename: str) -> int:
     return _count_wordsearch(lines, 'XMAS')
 
 
+def get_masx_count(filename: str) -> int:
+    lines = read_strings(filename)
+    count = 0
+    for y in range(0, len(lines) - 2):
+        for x in range(0, len(lines[y]) - 2):
+            count += (
+                (
+                    _check_diagonal(lines, x, y, 'MAS')
+                    or _check_diagonal(lines, x, y, 'SAM')
+                ) and (
+                   _check_reverse_diagonal(lines, x + 2, y, 'MAS')
+                   or _check_reverse_diagonal(lines, x + 2, y, 'SAM')
+                )
+            )
+    return count
+
+
 def _count_wordsearch(lines: list[str], word: str) -> int:
     count = _count_occurrences(lines, word)
     transformed = _transpose_lines(lines)
@@ -50,3 +67,15 @@ def _diagonalise_lines(lines: list[str]) -> list[str]:
         (' ' * (len(lines) - (i + 1))) + line + (' ' * i)
         for i, line in enumerate(lines)
     ]
+
+
+def _check_diagonal(
+    lines: list[str], x: int, y: int, word: str
+) -> bool:
+    return all(lines[y + i][x + i] == word[i] for i in range(0, len(word)))
+
+
+def _check_reverse_diagonal(
+    lines: list[str], x: int, y: int, word: str
+) -> bool:
+    return all(lines[y + i][x - i] == word[i] for i in range(0, len(word)))
