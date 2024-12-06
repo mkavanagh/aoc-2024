@@ -1,10 +1,10 @@
-from day06.model import PatrolMap
+from day06.model import load_board
 from lib.common import read_strings
 
 
 def get_patrolled_cell_count(filename: str) -> int:
     lines = read_strings(filename)
-    patrol_map = PatrolMap(lines)
+    patrol_map = load_board(lines)
 
     patrol_map.run()
 
@@ -15,7 +15,7 @@ def get_patrolled_cell_count(filename: str) -> int:
 
 def get_patrolled_route(filename: str) -> str:
     lines = read_strings(filename)
-    patrol_map = PatrolMap(lines)
+    patrol_map = load_board(lines)
 
     patrol_map.run()
 
