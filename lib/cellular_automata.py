@@ -101,10 +101,13 @@ class Board:
 
     def replace(
         self, i: int, j: int, char: str, cell_type: Optional[type(Cell)] = None
-    ) -> None:
+    ) -> bool:
         if 0 <= i < len(self.rows) and 0 <= j < len(self.rows[i]):
             self.rows[i] = replace_index(self.rows[i], j, char)
 
             if cell_type:
                 cell = cell_type(self, i, j)
                 self.live_cells[i, j] = cell
+
+            return True
+        return False

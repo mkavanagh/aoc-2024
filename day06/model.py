@@ -1,3 +1,6 @@
+from collections import defaultdict
+from typing import Optional
+
 from lib.cellular_automata import Board, Cell
 
 
@@ -49,5 +52,31 @@ CELL_TYPES: dict[str, type(Cell)] = {
 }
 
 
-def load_board(rows: list[str]) -> Board:
-    return Board(rows, CELL_TYPES)
+class TracingBoard(Board):
+    __slots__ = 'past_chars', 'looped'
+
+    past_chars: dict[tuple[int, int], set[str]]
+    looped: bool
+
+    def __init__(self, rows: list[str], cell_types: dict[str, type(Cell)]):
+        super().__init__(rows, cell_types)
+        self.past_chars = defaultdict(set)
+        self.looped = False
+
+    def run(self) -> None:
+        while self.step() and not self.looped:
+            pass
+
+    def replace(
+        self, i: int, j: int, char: str, cell_type: Optional[type(Cell)] = None
+    ) -> bool:
+        if super().replace(i, j, char, cell_type):
+            self.past_chars[(i, j)].add(self.rows[i][j])
+            if char in self.past_chars:
+                self.looped = True
+            return True
+        return False
+
+
+def load_board(rows: list[str]) -> TracingBoard:
+    return TracingBoard(rows, CELL_TYPES)
