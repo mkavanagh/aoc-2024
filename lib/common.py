@@ -31,4 +31,4 @@ def read_binary(filename: str) -> bytes:
 def read_strings(filename: str) -> list[str]:
     """Read a text file as a list of strings, one per line."""
     with open(filename, 'r') as file:
-        return [line for line in file]
+        return [line.rstrip('\n') for line in file]

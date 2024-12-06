@@ -8,6 +8,10 @@ from day01.commands import get_distance, get_similarity
 from day02.commands import get_safe_count, get_dampened_count
 from day03.commands import get_mul, get_mul_conditional
 from day04.commands import get_xmas_count, get_masx_count
+from day05.commands import (
+    get_precedence_rules, get_valid_page_updates,
+    get_day5_part1, get_day5_part2
+)
 from lib.commands import get_sizes, get_uniques
 
 
@@ -29,7 +33,9 @@ def main(argv: list[str]):
         get_distance, get_similarity, get_sizes, get_uniques,
         get_safe_count, get_dampened_count,
         get_mul, get_mul_conditional,
-        get_xmas_count, get_masx_count
+        get_xmas_count, get_masx_count,
+        get_precedence_rules, get_valid_page_updates,
+        get_day5_part1, get_day5_part2
     ]
 
     for func in funcs:
