@@ -10,19 +10,7 @@ def get_xmas_count(filename: str) -> int:
 
 def get_masx_count(filename: str) -> int:
     lines = read_strings(filename)
-    count = 0
-    for y in range(0, len(lines) - 2):
-        for x in range(0, len(lines[y]) - 2):
-            count += (
-                (
-                    _check_diagonal(lines, x, y, 'MAS')
-                    or _check_diagonal(lines, x, y, 'SAM')
-                ) and (
-                   _check_reverse_diagonal(lines, x + 2, y, 'MAS')
-                   or _check_reverse_diagonal(lines, x + 2, y, 'SAM')
-                )
-            )
-    return count
+    return _count_xword(lines, 'MAS')
 
 
 def _count_wordsearch(lines: list[str], word: str) -> int:
@@ -67,6 +55,28 @@ def _diagonalise_lines(lines: list[str]) -> list[str]:
         (' ' * (len(lines) - (i + 1))) + line + (' ' * i)
         for i, line in enumerate(lines)
     ]
+
+
+def _count_xword(lines: list[str], word: str) -> int:
+    count = 0
+    word_reversed = word[::-1]
+    margin = len(word) - 1
+    for y in range(0, len(lines) - margin):
+        for x in range(0, len(lines[y]) - margin):
+            count += _check_xword(lines, x, y, word, word_reversed)
+    return count
+
+
+def _check_xword(
+    lines: list[str], x: int, y: int, word: str, word_reversed: str
+) -> bool:
+    return (
+        _check_diagonal(lines, x, y, word)
+        or _check_diagonal(lines, x, y, word_reversed)
+    ) and (
+        _check_reverse_diagonal(lines, x + (len(word) - 1), y, word)
+        or _check_reverse_diagonal(lines, x + (len(word) - 1), y, word_reversed)
+    )
 
 
 def _check_diagonal(
