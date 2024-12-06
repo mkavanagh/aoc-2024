@@ -89,7 +89,7 @@ def _get_precedence_key_func(
     precedence_rules: dict[int, set[int]]
 ) -> Callable[[int], Any]:
     class PrecedenceKey:
-        __slots__ = ['value', 'appears_before']
+        __slots__ = 'value', 'appears_before'
 
         def __init__(self, value):
             self.value = value

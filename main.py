@@ -12,6 +12,7 @@ from day05.commands import (
     get_precedence_rules, get_valid_page_updates,
     get_day5_part1, get_day5_part2
 )
+from day06.commands import get_patrolled_cell_count, get_patrolled_route
 from lib.commands import get_sizes, get_uniques
 
 
@@ -35,7 +36,8 @@ def main(argv: list[str]):
         get_mul, get_mul_conditional,
         get_xmas_count, get_masx_count,
         get_precedence_rules, get_valid_page_updates,
-        get_day5_part1, get_day5_part2
+        get_day5_part1, get_day5_part2,
+        get_patrolled_cell_count, get_patrolled_route
     ]
 
     for func in funcs:

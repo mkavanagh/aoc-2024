@@ -1,4 +1,6 @@
-from day04.commands import _diagonalise_lines, _transpose_lines
+from day04.commands import _diagonalise
+from lib.lineutils import transpose
+
 
 def test_diagonalise_lines():
     lines = [
@@ -15,7 +17,7 @@ def test_diagonalise_lines():
         "...s   "
     ]
 
-    assert _diagonalise_lines(lines) == expected
+    assert _diagonalise(lines) == expected
 
     expected = [
         ".   ",
@@ -27,22 +29,4 @@ def test_diagonalise_lines():
         "   ."
     ]
 
-    assert _transpose_lines(_diagonalise_lines(lines)) == expected
-
-
-def test_transpose_lines():
-    lines = [
-        ".x..",
-        ".m..",
-        ".a..",
-        ".s.."
-    ]
-
-    expected = [
-        "....",
-        "....",
-        "xmas",
-        "...."
-    ]
-
-    assert _transpose_lines(lines) == expected
+    assert transpose(_diagonalise(lines)) == expected
