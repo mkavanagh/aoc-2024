@@ -14,6 +14,7 @@ from day05.commands import (
 from day06.commands import (
     get_looper_count, get_patrolled_cell_count, get_patrolled_route
 )
+from day07.commands import get_calibration, get_solvable, get_unsolvable
 from lib.commands import get_sizes, get_uniques
 
 
@@ -38,7 +39,8 @@ def main(argv: list[str]):
         get_xmas_count, get_masx_count,
         get_precedence_rules, get_valid_page_updates,
         get_day5_part1, get_day5_part2,
-        get_patrolled_cell_count, get_patrolled_route, get_looper_count
+        get_patrolled_cell_count, get_patrolled_route, get_looper_count,
+        get_calibration, get_solvable, get_unsolvable
     ]
 
     for func in funcs:
