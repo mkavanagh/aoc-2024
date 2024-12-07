@@ -1,7 +1,6 @@
-from collections import defaultdict
 from typing import Optional
 
-from lib.cellular_automata import Board, Cell
+from lib.cellular_automata import Cell, TracingBoard
 
 
 class GuardUpCell(Cell):
@@ -52,31 +51,23 @@ CELL_TYPES: dict[str, type(Cell)] = {
 }
 
 
-class TracingBoard(Board):
-    __slots__ = 'past_chars', 'looped'
+class PatrolBoard(TracingBoard):
+    __slots__ = 'route'
 
-    past_chars: dict[tuple[int, int], set[str]]
-    looped: bool
+    route: list[tuple[int, int]]
 
     def __init__(self, rows: list[str], cell_types: dict[str, type(Cell)]):
         super().__init__(rows, cell_types)
-        self.past_chars = defaultdict(set)
-        self.looped = False
-
-    def run(self) -> None:
-        while self.step() and not self.looped:
-            pass
+        self.route = []
 
     def replace(
         self, i: int, j: int, char: str, cell_type: Optional[type(Cell)] = None
-    ) -> bool:
-        if super().replace(i, j, char, cell_type):
-            self.past_chars[(i, j)].add(self.rows[i][j])
-            if char in self.past_chars:
-                self.looped = True
-            return True
-        return False
+    ) -> Optional[str]:
+        replaced = super().replace(i, j, char, cell_type)
+        if replaced and char == 'X':
+            self.route.append((i, j))
+        return replaced
 
 
-def load_board(rows: list[str]) -> TracingBoard:
-    return TracingBoard(rows, CELL_TYPES)
+def load_board(rows: list[str]) -> PatrolBoard:
+    return PatrolBoard(rows, CELL_TYPES)

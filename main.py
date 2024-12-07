@@ -5,14 +5,15 @@ import argparse
 import sys
 
 from day01.commands import get_distance, get_similarity
-from day02.commands import get_safe_count, get_dampened_count
+from day02.commands import get_dampened_count, get_safe_count
 from day03.commands import get_mul, get_mul_conditional
-from day04.commands import get_xmas_count, get_masx_count
+from day04.commands import get_masx_count, get_xmas_count
 from day05.commands import (
-    get_precedence_rules, get_valid_page_updates,
-    get_day5_part1, get_day5_part2
+    get_day5_part1, get_day5_part2, get_precedence_rules, get_valid_page_updates
 )
-from day06.commands import get_patrolled_cell_count, get_patrolled_route
+from day06.commands import (
+    get_looper_count, get_patrolled_cell_count, get_patrolled_route
+)
 from lib.commands import get_sizes, get_uniques
 
 
@@ -37,7 +38,7 @@ def main(argv: list[str]):
         get_xmas_count, get_masx_count,
         get_precedence_rules, get_valid_page_updates,
         get_day5_part1, get_day5_part2,
-        get_patrolled_cell_count, get_patrolled_route
+        get_patrolled_cell_count, get_patrolled_route, get_looper_count
     ]
 
     for func in funcs:
