@@ -1,25 +1,27 @@
 import re
 
-from day06.model import CELL_TYPES, PatrolBoard
-from lib.cellular_automata import TracingBoard
+from day06.model import CELL_TYPES, PatrolBoard, TracingBoard
+from lib.cellular_automata import Board
 from lib.common import read_strings
 from lib.lineutils import replace_index
+
+guard_matcher = re.compile('[\\^v<>]')
 
 
 def get_patrolled_cell_count(filename: str) -> int:
     lines = read_strings(filename)
-    patrol_map = TracingBoard(lines, CELL_TYPES)
+    patrol_map = Board(lines, CELL_TYPES)
 
     patrol_map.run()
 
     return sum(
-        row.count('X') for row in patrol_map.rows
+        len(guard_matcher.findall(row)) for row in patrol_map.rows
     )
 
 
 def get_patrolled_route(filename: str) -> str:
     lines = read_strings(filename)
-    patrol_map = TracingBoard(lines, CELL_TYPES)
+    patrol_map = Board(lines, CELL_TYPES)
 
     patrol_map.run()
 
@@ -31,17 +33,20 @@ def get_looper_count(filename: str) -> int:
     rows = list(original_lines)
     original_map = PatrolBoard(rows, CELL_TYPES)
 
+    guard_locations = set(original_map.live_cells.keys())
+
     original_map.run()
 
-    cleaned_lines = [re.sub('\\^v<>', '.', line) for line in original_lines]
+    for i, j in guard_locations:
+        original_lines[i] = replace_index(original_lines[i], j, '.')
 
     looper_count = 0
-    tried = set()
+    tried = set(guard_locations)
     for x, (i, j, _) in enumerate(original_map.route):
-        if x > 0 and not (i, j) in tried:
+        if not (i, j) in tried:
             tried.add((i, j))
 
-            new_lines = list(cleaned_lines)
+            new_lines = list(original_lines)
             new_lines[i] = replace_index(new_lines[i], j, '#')
 
             new_map = TracingBoard(new_lines, CELL_TYPES)

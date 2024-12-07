@@ -1,6 +1,6 @@
 from typing import Optional
 
-from lib.cellular_automata import Cell, TracingBoard
+from lib.cellular_automata import Board, Cell
 
 
 class GuardUpCell(Cell):
@@ -10,7 +10,6 @@ class GuardUpCell(Cell):
             self._replace_self('>', GuardRightCell)
         else:
             self._replace_up('^', GuardUpCell)
-            self._replace_self('X')
 
 
 class GuardDownCell(Cell):
@@ -20,7 +19,6 @@ class GuardDownCell(Cell):
             self._replace_self('<', GuardLeftCell)
         else:
             self._replace_down('v', GuardDownCell)
-            self._replace_self('X')
 
 
 class GuardLeftCell(Cell):
@@ -30,7 +28,6 @@ class GuardLeftCell(Cell):
             self._replace_self('^', GuardUpCell)
         else:
             self._replace_left('<', GuardLeftCell)
-            self._replace_self('X')
 
 
 class GuardRightCell(Cell):
@@ -40,7 +37,6 @@ class GuardRightCell(Cell):
             self._replace_self('v', GuardDownCell)
         else:
             self._replace_right('>', GuardRightCell)
-            self._replace_self('X')
 
 
 CELL_TYPES: dict[str, type(Cell)] = {
@@ -51,7 +47,7 @@ CELL_TYPES: dict[str, type(Cell)] = {
 }
 
 
-class PatrolBoard(TracingBoard):
+class PatrolBoard(Board):
     __slots__ = 'route'
 
     route: list[tuple[int, int, str]]
@@ -64,6 +60,31 @@ class PatrolBoard(TracingBoard):
         self, i: int, j: int, char: str, cell_type: Optional[type(Cell)] = None
     ) -> Optional[str]:
         replaced = super().replace(i, j, char, cell_type)
-        if replaced and char == 'X':
-            self.route.append((i, j, replaced))
+        if replaced:
+            self.route.append((i, j, char))
         return replaced
+
+
+class TracingBoard(Board):
+    __slots__ = 'looped'
+
+    looped: bool
+
+    def __init__(self, rows: list[str], cell_types: dict[str, type(Cell)]):
+        super().__init__(rows, cell_types)
+        self.looped = False
+
+    def run(self) -> None:
+        while self.step() and not self.looped:
+            pass
+
+    def replace(
+        self, i: int, j: int, char: str, cell_type: Optional[type(Cell)] = None
+    ) -> Optional[str]:
+        if 0 <= i < len(self.rows) and 0 <= j < len(self.rows[i]):
+            old_char = self.rows[i][j]
+            if old_char in CELL_TYPES:
+                if old_char == char:
+                    self.looped = True
+                char = old_char
+        return super().replace(i, j, char, cell_type)

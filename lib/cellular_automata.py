@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from collections import defaultdict
 from typing import Optional
 
 from lib.lineutils import replace_index
@@ -113,29 +112,3 @@ class Board:
 
             return replaced
         return None
-
-
-class TracingBoard(Board):
-    __slots__ = 'past_chars', 'looped'
-
-    past_chars: dict[tuple[int, int], set[str]]
-    looped: bool
-
-    def __init__(self, rows: list[str], cell_types: dict[str, type(Cell)]):
-        super().__init__(rows, cell_types)
-        self.past_chars = defaultdict(set)
-        self.looped = False
-
-    def run(self) -> None:
-        while self.step() and not self.looped:
-            pass
-
-    def replace(
-        self, i: int, j: int, char: str, cell_type: Optional[type(Cell)] = None
-    ) -> Optional[str]:
-        replaced = super().replace(i, j, char, cell_type)
-        if replaced:
-            self.past_chars[(i, j)].add(replaced)
-            if char in self.past_chars[(i, j)] and (i, j) in self.live_cells:
-                self.looped = True
-        return replaced
