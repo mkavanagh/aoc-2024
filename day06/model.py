@@ -54,7 +54,7 @@ CELL_TYPES: dict[str, type(Cell)] = {
 class PatrolBoard(TracingBoard):
     __slots__ = 'route'
 
-    route: list[tuple[int, int]]
+    route: list[tuple[int, int, str]]
 
     def __init__(self, rows: list[str], cell_types: dict[str, type(Cell)]):
         super().__init__(rows, cell_types)
@@ -65,9 +65,5 @@ class PatrolBoard(TracingBoard):
     ) -> Optional[str]:
         replaced = super().replace(i, j, char, cell_type)
         if replaced and char == 'X':
-            self.route.append((i, j))
+            self.route.append((i, j, replaced))
         return replaced
-
-
-def load_board(rows: list[str]) -> PatrolBoard:
-    return PatrolBoard(rows, CELL_TYPES)
