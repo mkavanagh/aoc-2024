@@ -18,6 +18,10 @@ from day07.commands import (
     get_calibration, get_calibration_concat, get_solvable,
     get_solvable_concat, get_unsolvable, get_unsolvable_concat
 )
+from day08.commands import (
+    get_antinode_uniques, get_antinodes,
+    get_resonant_antinode_uniques, get_resonant_antinodes
+)
 from lib.commands import get_sizes, get_uniques
 
 
@@ -44,7 +48,9 @@ def main(argv: list[str]):
         get_day5_part1, get_day5_part2,
         get_patrolled_cell_count, get_patrolled_route, get_looper_count,
         get_calibration, get_solvable, get_unsolvable,
-        get_calibration_concat, get_solvable_concat, get_unsolvable_concat
+        get_calibration_concat, get_solvable_concat, get_unsolvable_concat,
+        get_antinode_uniques, get_antinodes,
+        get_resonant_antinode_uniques, get_resonant_antinodes
     ]
 
     for func in funcs:
