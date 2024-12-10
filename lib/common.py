@@ -48,7 +48,7 @@ def row_input(value_type):
             with _open_text_input(filename) as input_file:
                 return func(
                     [
-                        [int(x) for x in line.split()]
+                        [value_type(x) for x in line.split()]
                         for line in input_file
                     ],
                     *args
