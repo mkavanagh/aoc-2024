@@ -31,10 +31,11 @@ def main(argv: list[str]):
     """
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('file')
-
     cmd_parsers = parser.add_subparsers(
         title='Available sub-commands',
+        description='''
+To get help with a specific sub-command, use: %(prog)s [command] -h
+''',
         metavar='[command]',
         required=True
     )
@@ -56,6 +57,7 @@ def main(argv: list[str]):
     for func in funcs:
         cmd = func.__name__.removeprefix('get_')
         cmd_parser = cmd_parsers.add_parser(cmd, help=func.__doc__)
+        cmd_parser.add_argument('file')
         cmd_parser.set_defaults(func=func)
 
     args = parser.parse_args(argv[1:])
