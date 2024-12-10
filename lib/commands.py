@@ -5,7 +5,7 @@ from lib.common import column_input
 
 @column_input(int)
 def get_column_sizes(columns: list[list[int]]) -> list[int]:
-    """Count the number of values in each input colu,n."""
+    """Count the number of values in each input column."""
     return [len(column) for column in columns]
 
 

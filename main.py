@@ -4,25 +4,7 @@
 import argparse
 import sys
 
-from day01.commands import get_distance, get_similarity
-from day02.commands import get_dampened_count, get_safe_count
-from day03.commands import get_mul, get_mul_conditional
-from day04.commands import get_masx_count, get_xmas_count
-from day05.commands import (
-    get_day5_part1, get_day5_part2, get_precedence_rules, get_valid_page_updates
-)
-from day06.commands import (
-    get_looper_count, get_patrolled_cell_count, get_patrolled_route
-)
-from day07.commands import (
-    get_calibration, get_calibration_concat, get_solvable,
-    get_solvable_concat, get_unsolvable, get_unsolvable_concat
-)
-from day08.commands import (
-    get_antinode_uniques, get_antinodes,
-    get_resonant_antinode_uniques, get_resonant_antinodes
-)
-from lib.commands import get_column_sizes, get_column_uniques
+from lib.common import collect_commands
 
 
 def main(argv: list[str]):
@@ -40,26 +22,22 @@ To get help with a specific sub-command, use: %(prog)s [command] -h
         required=True
     )
 
-    funcs = [
-        get_column_sizes, get_column_uniques,
-        get_distance, get_similarity,
-        get_safe_count, get_dampened_count,
-        get_mul, get_mul_conditional,
-        get_xmas_count, get_masx_count,
-        get_precedence_rules, get_valid_page_updates,
-        get_day5_part1, get_day5_part2,
-        get_patrolled_cell_count, get_patrolled_route, get_looper_count,
-        get_calibration, get_solvable, get_unsolvable,
-        get_calibration_concat, get_solvable_concat, get_unsolvable_concat,
-        get_antinode_uniques, get_antinodes,
-        get_resonant_antinode_uniques, get_resonant_antinodes
-    ]
+    with collect_commands() as funcs:
+        __import__('lib.commands')
+        __import__('day01.commands')
+        __import__('day02.commands')
+        __import__('day03.commands')
+        __import__('day04.commands')
+        __import__('day05.commands')
+        __import__('day06.commands')
+        __import__('day07.commands')
+        __import__('day08.commands')
 
-    for func in funcs:
-        cmd = func.__name__.removeprefix('get_')
-        cmd_parser = cmd_parsers.add_parser(cmd, help=func.__doc__)
-        cmd_parser.add_argument('file', nargs='?')
-        cmd_parser.set_defaults(func=func)
+        for func in funcs:
+            cmd = func.__name__.removeprefix('get_')
+            cmd_parser = cmd_parsers.add_parser(cmd, help=func.__doc__)
+            cmd_parser.add_argument('file', nargs='?')
+            cmd_parser.set_defaults(func=func)
 
     args = parser.parse_args(argv[1:])
 

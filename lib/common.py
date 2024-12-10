@@ -1,8 +1,25 @@
 """Common utilities (IO etc)."""
 import io
 import sys
+from contextlib import contextmanager
 from functools import wraps
 from typing import BinaryIO, TextIO, Union
+
+commands_stack = []
+
+
+@contextmanager
+def collect_commands():
+    """
+    Returns all functions decorated with one of the input mappers from this
+    module while the context was open.
+    """
+    commands = []
+    commands_stack.append(commands)
+    try:
+        yield commands
+    finally:
+        commands_stack.pop()
 
 
 def column_input(value_type):
@@ -18,6 +35,7 @@ def column_input(value_type):
                             columns.append([])
                         columns[i].append(value_type(x))
             return func(columns, *args)
+        _append_command(decorated)
         return decorated
     return decorator
 
@@ -35,6 +53,7 @@ def row_input(value_type):
                     ],
                     *args
                 )
+        _append_command(decorated)
         return decorated
     return decorator
 
@@ -49,6 +68,7 @@ def line_input():
                     [line.rstrip('\n') for line in input_file],
                     *args
                 )
+        _append_command(decorated)
         return decorated
     return decorator
 
@@ -60,6 +80,7 @@ def binary_input():
         def decorated(filename, *args):
             with _open_binary_input(filename) as input_file:
                 return func(input_file.read(), *args)
+        _append_command(decorated)
         return decorated
     return decorator
 
@@ -74,3 +95,8 @@ def _open_binary_input(filename : Union[None, str]) -> BinaryIO:
     if filename is None:
         return sys.stdin.buffer
     return open(filename, 'b', encoding='utf-8')
+
+
+def _append_command(command):
+    if commands_stack:
+        commands_stack[-1].append(command)
