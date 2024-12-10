@@ -1,17 +1,17 @@
 from collections import defaultdict
 from typing import Any, Callable
 
-from lib.common import read_strings
+from lib.common import line_input
 
 
-def get_precedence_rules(filename: str) -> dict[int, set[int]]:
-    lines = read_strings(filename)
+@line_input()
+def get_precedence_rules(lines: list[str]) -> dict[int, set[int]]:
     _, precedence_rules = _parse_precedence_rules(lines)
     return precedence_rules
 
 
-def get_valid_page_updates(filename: str) -> list[list[int]]:
-    lines = read_strings(filename)
+@line_input()
+def get_valid_page_updates(lines: list[str]) -> list[list[int]]:
     i, precedence_rules = _parse_precedence_rules(lines)
     return [
         update
@@ -20,9 +20,9 @@ def get_valid_page_updates(filename: str) -> list[list[int]]:
     ]
 
 
-def get_day5_part1(filename: str) -> int:
+@line_input()
+def get_day5_part1(lines: list[str]) -> int:
     """A snowball's chance in hell of giving this a descriptive name."""
-    lines = read_strings(filename)
     i, precedence_rules = _parse_precedence_rules(lines)
     return sum(
         _get_middle_page(update)
@@ -31,8 +31,8 @@ def get_day5_part1(filename: str) -> int:
     )
 
 
-def get_day5_part2(filename: str) -> int:
-    lines = read_strings(filename)
+@line_input()
+def get_day5_part2(lines: list[str]) -> int:
     i, precedence_rules = _parse_precedence_rules(lines)
     return sum(
         _get_middle_page(_apply_precedence_rules(precedence_rules, update))

@@ -1,16 +1,16 @@
 """Advent of Code 2024, Day 4."""
 
-from lib.common import read_strings
-from lib.lineutils import transpose, flip
+from lib.common import line_input
+from lib.lineutils import flip, transpose
 
 
-def get_xmas_count(filename: str) -> int:
-    lines = read_strings(filename)
+@line_input()
+def get_xmas_count(lines: list[str]) -> int:
     return _count_wordsearch(lines, 'XMAS')
 
 
-def get_masx_count(filename: str) -> int:
-    lines = read_strings(filename)
+@line_input()
+def get_masx_count(lines: list[str]) -> int:
     return _count_xword(lines, 'MAS')
 
 

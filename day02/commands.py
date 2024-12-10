@@ -1,13 +1,23 @@
 """Advent of Code 2024, Day 2"""
 
-from lib.common import read_rows
+from lib.common import row_input
 
 
-def get_safe_count(filename: str) -> int:
+@row_input(int)
+def get_safe_count(rows: list[list[int]]) -> int:
     """
     Count the number of "safe reports" according to Day 2, Part 1.
     """
-    return sum(_is_safe(report) for report in read_rows(filename))
+    return sum(_is_safe(report) for report in rows)
+
+
+@row_input(int)
+def get_dampened_count(rows: list[list[int]]) -> int:
+    """
+    Count the number of "safe reports" after "dampening" according to Day 2,
+    Part 2.
+    """
+    return sum(_is_safe(report, True) for report in rows)
 
 
 def _is_safe(report: list[int], use_dampener: bool=False) -> bool:
@@ -32,14 +42,3 @@ def _is_safe(report: list[int], use_dampener: bool=False) -> bool:
 
 def _dampener(report: list[int], i: int) -> bool:
     return _is_safe(report[:i] + report[i + 1:]) # cut out report[i]
-
-
-def get_dampened_count(filename: str) -> int:
-    """
-    Count the number of "safe reports" after "dampening" according to Day 2,
-    Part 2.
-    """
-    return sum(
-        _is_safe(report, True)
-        for report in read_rows(filename)
-    )

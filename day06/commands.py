@@ -2,14 +2,14 @@ import re
 
 from day06.model import CELL_TYPES, PatrolBoard, TracingBoard
 from lib.cellular_automata import Board
-from lib.common import read_strings
+from lib.common import line_input
 from lib.lineutils import replace_index
 
 guard_matcher = re.compile('[\\^v<>]')
 
 
-def get_patrolled_cell_count(filename: str) -> int:
-    lines = read_strings(filename)
+@line_input()
+def get_patrolled_cell_count(lines: list[str]) -> int:
     patrol_map = Board(lines, CELL_TYPES)
 
     patrol_map.run()
@@ -19,8 +19,8 @@ def get_patrolled_cell_count(filename: str) -> int:
     )
 
 
-def get_patrolled_route(filename: str) -> str:
-    lines = read_strings(filename)
+@line_input()
+def get_patrolled_route(lines: list[str]) -> str:
     patrol_map = Board(lines, CELL_TYPES)
 
     patrol_map.run()
@@ -28,8 +28,8 @@ def get_patrolled_route(filename: str) -> str:
     return '\n'.join(patrol_map.rows)
 
 
-def get_looper_count(filename: str) -> int:
-    original_lines = read_strings(filename)
+@line_input()
+def get_looper_count(original_lines: list[str]) -> int:
     rows = list(original_lines)
     original_map = PatrolBoard(rows, CELL_TYPES)
 

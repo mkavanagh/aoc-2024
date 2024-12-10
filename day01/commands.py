@@ -1,26 +1,23 @@
 """Advent of Code 2024, Day 1"""
+from lib.common import column_input
 
-from lib.common import read_columns
 
-
-def get_distance(filename: str) -> int:
+@column_input(int)
+def get_distance(columns: list[list[int]]) -> int:
     """Calculate the "distance" score from Day 1, Part 1."""
 
-    lists = read_columns(filename)
-
     distance = 0
-    for l, r in zip(sorted(lists[0]), sorted(lists[1])):
+    for l, r in zip(sorted(columns[0]), sorted(columns[1])):
         distance += abs(l - r)
     return distance
 
 
-def get_similarity(filename: str) -> int:
+@column_input(int)
+def get_similarity(columns: list[list[int]]) -> int:
     """Calculate the "similarity" score from Day 1, Part 2."""
 
-    lists = read_columns(filename)
-
     similarity = 0
-    left, right = sorted(lists[0]), sorted(lists[1])
+    left, right = sorted(columns[0]), sorted(columns[1])
     left_index, right_index = 0, 0
 
     while left_index < len(left) and right_index < len(right):

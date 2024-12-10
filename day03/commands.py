@@ -2,22 +2,22 @@
 
 from typing import Optional
 
-from lib.common import read_binary
+from lib.common import binary_input
 
 
-def get_mul(filename: str) -> int:
+@binary_input()
+def get_mul(program: bytes) -> int:
     """Parse and execute a "mul" program according to Day 3, Part 1."""
-    program = read_binary(filename)
     parsed = _parse_mul(program)
     return sum(x * y for x, y in parsed)
 
 
-def get_mul_conditional(filename: str) -> int:
+@binary_input()
+def get_mul_conditional(program: bytes) -> int:
     """
     Parse and execute a "mul with conditionals" program according to Day 3,
     Part 2.
     """
-    program = read_binary(filename)
     parsed = _parse_conditional_mul(program)
     return sum(x * y for x, y in parsed)
 

@@ -1,6 +1,6 @@
 from typing import Callable, Generator, Iterable
 
-from lib.common import read_strings
+from lib.common import line_input
 
 
 class Solver:
@@ -34,36 +34,42 @@ default_solver = Solver(default_operators)
 concat_solver = Solver(default_operators + [lambda x, y: int(str(x) + str(y))])
 
 
-def get_calibration(filename: str) -> int:
-    equations = _parse_equations(read_strings(filename))
+@line_input()
+def get_calibration(lines: list[str]) -> int:
+    equations = _parse_equations(lines)
     return sum(equation[0] for equation in _solvable(equations, default_solver))
 
 
-def get_solvable(filename: str) -> str:
-    equations = _parse_equations(read_strings(filename))
+@line_input()
+def get_solvable(lines: list[str]) -> str:
+    equations = _parse_equations(lines)
     return _describe(_solvable(equations, default_solver))
 
 
-def get_unsolvable(filename: str) -> str:
-    equations = _parse_equations(read_strings(filename))
+@line_input()
+def get_unsolvable(lines: list[str]) -> str:
+    equations = _parse_equations(lines)
     return _describe(_unsolvable(equations, default_solver))
 
 
-def get_calibration_concat(filename: str) -> int:
-    equations = _parse_equations(read_strings(filename))
+@line_input()
+def get_calibration_concat(lines: list[str]) -> int:
+    equations = _parse_equations(lines)
     return sum(
         equation[0]
         for equation in _solvable(equations, concat_solver)
     )
 
 
-def get_solvable_concat(filename: str) -> str:
-    equations = _parse_equations(read_strings(filename))
+@line_input()
+def get_solvable_concat(lines: list[str]) -> str:
+    equations = _parse_equations(lines)
     return _describe(_solvable(equations, concat_solver))
 
 
-def get_unsolvable_concat(filename: str) -> str:
-    equations = _parse_equations(read_strings(filename))
+@line_input()
+def get_unsolvable_concat(lines: list[str]) -> str:
+    equations = _parse_equations(lines)
     return _describe(_unsolvable(equations, concat_solver))
 
 

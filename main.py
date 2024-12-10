@@ -22,7 +22,7 @@ from day08.commands import (
     get_antinode_uniques, get_antinodes,
     get_resonant_antinode_uniques, get_resonant_antinodes
 )
-from lib.commands import get_sizes, get_uniques
+from lib.commands import get_column_sizes, get_column_uniques
 
 
 def main(argv: list[str]):
@@ -41,7 +41,8 @@ To get help with a specific sub-command, use: %(prog)s [command] -h
     )
 
     funcs = [
-        get_distance, get_similarity, get_sizes, get_uniques,
+        get_column_sizes, get_column_uniques,
+        get_distance, get_similarity,
         get_safe_count, get_dampened_count,
         get_mul, get_mul_conditional,
         get_xmas_count, get_masx_count,
@@ -57,7 +58,7 @@ To get help with a specific sub-command, use: %(prog)s [command] -h
     for func in funcs:
         cmd = func.__name__.removeprefix('get_')
         cmd_parser = cmd_parsers.add_parser(cmd, help=func.__doc__)
-        cmd_parser.add_argument('file')
+        cmd_parser.add_argument('file', nargs='?')
         cmd_parser.set_defaults(func=func)
 
     args = parser.parse_args(argv[1:])

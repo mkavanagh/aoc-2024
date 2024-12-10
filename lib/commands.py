@@ -1,15 +1,15 @@
 """Utility commands."""
 
-from lib.common import read_columns
+from lib.common import column_input
 
 
-def get_sizes(filename: str) -> list[int]:
-    """Count the number of values in each input list."""
-    lists = read_columns(filename)
-    return [len(x) for x in lists]
+@column_input(int)
+def get_column_sizes(columns: list[list[int]]) -> list[int]:
+    """Count the number of values in each input colu,n."""
+    return [len(column) for column in columns]
 
 
-def get_uniques(filename: str) -> list[int]:
-    """Count the number of unique values in each input list."""
-    lists = read_columns(filename)
-    return [len(set(x)) for x in lists]
+@column_input(int)
+def get_column_uniques(columns: list[list[int]]) -> list[int]:
+    """Count the number of unique values in each input column."""
+    return [len(set(column)) for column in columns]
