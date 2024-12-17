@@ -58,6 +58,24 @@ def row_input(value_type):
     return decorator
 
 
+def grid_input(value_type):
+    """Read a file containing a grid of single-character cells."""
+    def decorator(func):
+        @wraps(func)
+        def decorated(filename, *args):
+            with _open_text_input(filename) as input_file:
+                return func(
+                    [
+                        [value_type(x) for x in line.strip()]
+                        for line in input_file
+                    ],
+                    *args
+                )
+        _append_command(decorated)
+        return decorated
+    return decorator
+
+
 def line_input():
     """Read a text file as a list of strings, one per line."""
     def decorator(func):
