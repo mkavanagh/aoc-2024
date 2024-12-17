@@ -28,6 +28,17 @@ class TrailNode:
             peaks.update(node.peaks())
         return peaks
 
+    def routes(self) -> list[list[TrailNode]]:
+        if self.height == MAX_HEIGHT:
+            return [[self]]
+        routes = list()
+        for node in self.next_nodes:
+            node_routes = node.routes()
+            for route in node_routes:
+                route.insert(0, self)
+            routes += node_routes
+        return routes
+
     def describe(self, indent='') -> str:
         return (
             indent + f'Point {self.pos}, height {self.height}, next:\n'
@@ -42,6 +53,12 @@ class TrailNode:
 def get_trailhead_score(rows: list[list[int]]) -> int:
     trails = _read_trails(rows)
     return sum(len(node.peaks()) for node in trails)
+
+
+@grid_input(int)
+def get_trailhead_rating(rows: list[list[int]]) -> int:
+    trails = _read_trails(rows)
+    return sum(len(node.routes()) for node in trails)
 
 
 @grid_input(int)
