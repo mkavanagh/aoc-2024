@@ -35,6 +35,7 @@ To get help with a specific sub-command, use: %(prog)s [command] -h
         __import__('day09.commands')
         __import__('day10.commands')
         __import__('day11.commands')
+        __import__('day12.commands')
 
         for func in funcs:
             cmd = func.__name__.removeprefix('get_')
